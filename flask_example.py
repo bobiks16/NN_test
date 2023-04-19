@@ -9,6 +9,17 @@ scaler_data = pickle.load(open('scaler_data.pkl', 'rb'))
 
 app = Flask(__name__)
 
+import numpy as np
+import pandas as pd
+import joblib
+
+full_dataset = pd.read_csv("full_dataset.csv")
+new_data = [1.0, 2.0, 3.0, 4.0]
+full_dataset = full_dataset.append(pd.Series(new_data, index=full_dataset.columns), ignore_index=True)
+normalized_dataset = normalizer.transform(full_dataset)
+last_seven_days = normalized_dataset[-7:]
+prediction = model.predict(np.array([last_seven_days]))
+
 @app.route('/predict', methods=['POST'])
 def predict():
     data1 = request.form['data1']
